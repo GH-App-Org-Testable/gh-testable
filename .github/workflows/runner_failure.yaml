@@ -1,0 +1,37 @@
+name: Runner Failure Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish-artifacts-enabled:
+        description: 'Publish artifacts enabled'
+        required: false
+        type: boolean
+      target-branch-name:
+        description: 'Target branch name.'
+        required: false
+        type: string
+        default: 'master'
+      pr-title:
+        description: 'Title of the PR'
+        required: false
+        type: string
+  push:
+    branches: [ "main" ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+   
+    - name: Fail build
+      run: |
+          echo "::error file=.github,line=10::The self-hosted runner: java-backend-arm64-xlarge-7h68l-runner-vkg5j lost communication with the server. Verify the machine is running and has a healthy network connection. Anything in your workflow that terminates the runner process, starves it for CPU/Memory, or blocks its network access can cause this error."
+          exit 1
+      
+    - name: Verify publishing step
+      if: ${{ inputs.publish-artifacts-enabled }}
+      run: echo "Publishing success"
+  
